@@ -169,49 +169,8 @@ void Canvas::draw(const Octagon &aOctagon)
 }
 
 
-#define ENABLE_CUSTOM_LINE_DRAW 1
+
 // Mostly copied from the olive.c library, don't fully know how it works
-// Doesn't take into consideration the width of a line.
-#if !ENABLE_CUSTOM_LINE_DRAW
-void Canvas::draw(const Line &aLine)
-{
-    int x1 = aLine.getX1();
-    int x2 = aLine.getX2();
-    int y1 = aLine.getY1();
-    int y2 = aLine.getY2();
-    int dx = x2 - x1;
-    int dy = y2 - y1;
-
-    if (dx == 0 && dy == 0) {
-        draw(Circle(y1, x1, aLine.getWidth() / 2, aLine.getColor()));
-    }
-    if (abs(dx) > abs(dy)) {
-        if (x1 > x2) {
-            swap(x1, x2);
-            swap(y1, y2);
-        }
-
-        for (int x = x1; x <= x2; ++x) {
-            int y = dy*(x - x1)/dx + y1;
-            if (pointInBounds(y, x)) {
-                pixels[y*width+x] = aLine.getColor();
-            }
-        }
-    } else {
-        if (y1 > y2) {
-            swap(x1, x2);
-            swap(y1, y2);
-        }
-
-        for (int y = y1; y <= y2; ++y) {
-            int x = dx*(y - y1)/dy + x1;
-            if (pointInBounds(y, x)) {
-                pixels[y*width+x] = aLine.getColor();
-            }
-        }
-    }
-}
-#elif ENABLE_CUSTOM_LINE_DRAW
 void Canvas::draw(const Line &aLine)
 {
     int x1 = aLine.getX1();
@@ -250,4 +209,3 @@ void Canvas::draw(const Line &aLine)
         }
     }
 }
-#endif
