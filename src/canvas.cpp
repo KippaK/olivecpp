@@ -1,5 +1,7 @@
 #include "../include/canvas.h"
 
+#include "lodepng.h"
+
 #include <stdlib.h>
 #include <cstring>
 #include <string>
@@ -7,8 +9,13 @@
 #include <cstdio>
 #include <fstream>
 #include <algorithm>
+#include <vector>
+#include <iostream>
 
+using std::cout;
+using std::endl;
 using std::string;
+using std::vector;
 using std::abs;
 using std::pow;
 using std::sqrt;
@@ -21,11 +28,6 @@ using std::swap;
 bool Canvas::pythagoreanCheck(int a, int b, float c) const {
     if (a * a + b * b > c * c) { return false; }
     return true;
-}
-
-bool Canvas::containsExtension(const std::string& file) const {
-    size_t dotPos = file.rfind('.');
-    return (dotPos != std::string::npos && dotPos != file.length() - 1);
 }
 
 Canvas::Canvas(size_t aHeight, size_t aWidth)
@@ -48,6 +50,11 @@ void Canvas::fill(uint32_t aColor)
     for (int i = 0; i < height * width; i++) {
         pixels[i] = aColor;
     }
+}
+
+bool Canvas::containsExtension(const std::string& file) const {
+    size_t dotPos = file.rfind('.');
+    return (dotPos != std::string::npos && dotPos != file.length() - 1);
 }
 
 void Canvas::saveToPPM(string fileName)
@@ -73,6 +80,29 @@ void Canvas::saveToPPM(string fileName)
     }
     return;
 }
+void Canvas::saveToPNG(string file)
+{
+    if (!containsExtension(file)) { file += ".png"; }
+    std::vector<unsigned char> image;
+    image.reserve(width * height * 4);
+
+    for (int i = 0; i < width * height; ++i) {
+        uint32_t pixel = pixels[i];
+        image.push_back((pixel >> 16) & 0xFF); // Red
+        image.push_back((pixel >> 8) & 0xFF);  // Green
+        image.push_back(pixel & 0xFF);         // Blue
+        image.push_back((pixel >> 24) & 0xFF); // Alpha
+    }
+
+    unsigned error = lodepng::encode(file, image, width, height);
+
+    if (error) {
+        cout << "PNG encoding error: " << lodepng_error_text(error) << endl;
+    } else {
+        cout << "PNG saved successfully as " << file << endl;
+    }
+}
+
 bool Canvas::pointInBounds(int y, int x) const
 {
     return 0 <= x && x < width && 0 <= y && y < height;

@@ -29,6 +29,7 @@ public:
     void draw(const Line &aLine);
 
     void saveToPPM(string file);
+    void saveToPNG(string file);
 
 private:
     bool pointInBounds(int y, int x) const;
