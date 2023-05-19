@@ -11,6 +11,7 @@ public:
         int aX1,
         int aY2, 
         int aX2,
+        float aWidth,
         uint32_t aColor
     );
 
@@ -24,8 +25,8 @@ public:
     int getY2() const;
     int getX2() const;
 
-    void setWidth(size_t aWidth);
-    size_t getWidth() const;
+    void setWidth(float aWidth);
+    float getWidth() const;
 
     void setColor(uint32_t aColor);
     uint32_t getColor() const;
@@ -37,7 +38,7 @@ private:
     int y2;
     int x2;
 
-    size_t width;
+    float width;
 
     uint32_t color;
 };

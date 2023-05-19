@@ -4,21 +4,27 @@ Ring::Ring(
     size_t aPosY,
     size_t aPosX,
     float aR,
-    size_t aThickness,
+    float aThickness,
     uint32_t aColor
     ) : Circle(aPosY, aPosX, aR, aColor)
 {
     thickness = aThickness;
+    if (aThickness > aR) {
+        thickness = aR;
+    }
 }
 
 Ring::~Ring() {}
 
-void Ring::setThickness(size_t aThickness)
+void Ring::setThickness(float aThickness)
 {
     thickness = aThickness;
+    if (aThickness > r) {
+        thickness = r;
+    }
 }
 
-size_t Ring::getThickness() const
+float Ring::getThickness() const
 {
     return thickness;
 }

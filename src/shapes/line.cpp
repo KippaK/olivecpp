@@ -1,13 +1,18 @@
 #include "../../include/shapes/line.h"
 
+#include <cmath>
+
+using std::abs;
+
 Line::Line() {}
 
-Line::Line(int aY1, int aX1, int aY2, int aX2, uint32_t aColor)
+Line::Line(int aY1, int aX1, int aY2, int aX2, float aWidth, uint32_t aColor)
 {
     y1 = aY1;
     x1 = aX1;
     y2 = aY2;
     x2 = aX2;
+    width = abs(aWidth);
     color = aColor;
 }
 
@@ -53,13 +58,13 @@ int Line::getX2() const
 {
     return x2;
 }
-size_t Line::getWidth() const
+float Line::getWidth() const
 {
     return width;
 }
-void Line::setWidth(size_t aWidth)
+void Line::setWidth(float aWidth)
 {
-    width = aWidth;
+    width = abs(aWidth);
 }
 
 void Line::setColor(uint32_t aColor)

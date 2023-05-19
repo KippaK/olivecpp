@@ -18,12 +18,12 @@ using std::swap;
 
 #define sqrt2 1.41421356
 
-bool pythagoreanCheck(int a, int b, int c) {
+bool Canvas::pythagoreanCheck(int a, int b, float c) const {
     if (a * a + b * b > c * c) { return false; }
     return true;
 }
 
-bool containsExtension(const std::string& file) {
+bool Canvas::containsExtension(const std::string& file) const {
     size_t dotPos = file.rfind('.');
     return (dotPos != std::string::npos && dotPos != file.length() - 1);
 }
@@ -75,7 +75,7 @@ void Canvas::saveToPPM(string fileName)
 }
 bool Canvas::pointInBounds(int y, int x) const
 {
-    return 0 <= x && x < (int) width && 0 <= y && y < (int) height;
+    return 0 <= x && x < width && 0 <= y && y < height;
 }
 
 void Canvas::draw(const Rectangle &aRectangle)
@@ -109,6 +109,7 @@ void Canvas::draw(const Circle &aCircle)
         for (int x = x1; x <= x2; x++)
         {
             if (x < 0 || x >= width) { continue; }
+            if (pixels[y*width+x] == aCircle.getColor()) { continue; }
             int dx = abs(x - aCircle.getPosX());
             int dy = abs(y - aCircle.getPosY()); 
             if (pythagoreanCheck(dy, dx, (int) aCircle.getRadius())) {
@@ -120,10 +121,10 @@ void Canvas::draw(const Circle &aCircle)
 
 void Canvas::draw(const Ring &aRing)
 {
-    int x1 = aRing.getPosX() - (int) aRing.getRadius();
-    int x2 = aRing.getPosX() + (int) aRing.getRadius();
-    int y1 = aRing.getPosY() - (int) aRing.getRadius();
-    int y2 = aRing.getPosY() + (int) aRing.getRadius();
+    int x1 = aRing.getPosX() - ceil(aRing.getRadius());
+    int x2 = aRing.getPosX() + ceil(aRing.getRadius());
+    int y1 = aRing.getPosY() - ceil(aRing.getRadius());
+    int y2 = aRing.getPosY() + ceil(aRing.getRadius());
 
     for (int y = y1; y <= y2; y++) 
     {
@@ -131,10 +132,11 @@ void Canvas::draw(const Ring &aRing)
         for (int x = x1; x <= x2; x++)
         {
             if (x < 0 || x >= width) { continue; }
+            if (pixels[y*width+x] == aRing.getColor()) { continue; }
             int dx = abs(x - aRing.getPosX());
             int dy = abs(y - aRing.getPosY());
-            int radius = (int)aRing.getRadius();
-            int thickness = aRing.getThickness();
+            float radius = aRing.getRadius();
+            float thickness = aRing.getThickness();
             bool insideOuterEdge = pythagoreanCheck(dy, dx, radius);
             bool insideInnerEdge = pythagoreanCheck(dy, dx, radius - thickness);
             if (insideOuterEdge && !insideInnerEdge) {
@@ -181,7 +183,7 @@ void Canvas::draw(const Line &aLine)
     int dy = y2 - y1;
 
     if (dx == 0 && dy == 0) {
-        draw(Circle(y1, x1, ceil(aLine.getWidth() / 2), aLine.getColor()));
+        draw(Circle(y1, x1, aLine.getWidth() / 2, aLine.getColor()));
     }
     if (abs(dx) > abs(dy)) {
         if (x1 > x2) {
@@ -220,7 +222,7 @@ void Canvas::draw(const Line &aLine)
     int dy = y2 - y1;
 
     if (dx == 0 && dy == 0) {
-        draw(Circle(y1, x1, ceil(aLine.getWidth() / 2), aLine.getColor()));
+        draw(Circle(y1, x1, aLine.getWidth() / 2, aLine.getColor()));
     }
     if (abs(dx) > abs(dy)) {
         if (x1 > x2) {
@@ -231,7 +233,7 @@ void Canvas::draw(const Line &aLine)
         for (int x = x1; x <= x2; ++x) {
             int y = dy*(x - x1)/dx + y1;
             if (pointInBounds(y, x)) {
-                draw(Circle(y, x, ceil(aLine.getWidth() / 2), aLine.getColor()));
+                draw(Circle(y, x, aLine.getWidth() / 2, aLine.getColor()));
             }
         }
     } else {
@@ -243,7 +245,7 @@ void Canvas::draw(const Line &aLine)
         for (int y = y1; y <= y2; ++y) {
             int x = dx*(y - y1)/dy + x1;
             if (pointInBounds(y, x)) {
-                draw(Circle(y, x, ceil(aLine.getWidth() / 2), aLine.getColor()));
+                draw(Circle(y, x, aLine.getWidth() / 2, aLine.getColor()));
             }
         }
     }

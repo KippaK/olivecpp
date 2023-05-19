@@ -13,6 +13,6 @@ public:
 
     void setR(float aR);
 
-private:
+protected:
     float r;
 };

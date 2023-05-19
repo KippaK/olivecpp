@@ -32,6 +32,8 @@ public:
 
 private:
     bool pointInBounds(int y, int x) const;
+    bool pythagoreanCheck(int a, int b, float c) const;
+    bool containsExtension(const std::string& file) const;
 
 private:
     uint32_t *pixels;
