@@ -2,3 +2,4 @@
 *.ppm
 .vscode
 build.bat
+build.sh

@@ -14,6 +14,7 @@ using std::string;
 int main() {
     const size_t WIDTH = 800;
     const size_t HEIGHT = 600;
+    string file = "output.ppm";
     Example::Canvas *canvas = new Example::Canvas(HEIGHT, WIDTH, DARKGREY);
     //  canvas->drawSnowman(HEIGHT/2, WIDTH/2, 400);
     //  canvas->drawStopSign(HEIGHT/2, WIDTH/2, 300);
@@ -24,6 +25,6 @@ int main() {
     canvas->drawOlympicRings(250, 200, 50);
     canvas->drawStopSign(400, 200, 100);
     canvas->drawSnowman(HEIGHT/2, 600, 400);
-    canvas->saveToPPM("output.ppm");
+    canvas->saveToPPM(file);
     return 0;
 }
