@@ -31,13 +31,12 @@ public:
     void saveToPPM(string file);
 
 private:
-    bool pointInBounds(int y, int x) const;
-    bool pythagoreanCheck(int a, int b, float c) const;
-    bool containsExtension(const std::string& file) const;
+    inline bool pointInBounds(int y, int x) const;
+    inline bool pointInsideRadius(int a, int b, float r) const;
+    inline bool containsExtension(const std::string& file) const;
 
 private:
     uint32_t *pixels;
     size_t height;
     size_t width;
-
 };

@@ -18,14 +18,13 @@ using std::swap;
 
 #define sqrt2 1.41421356
 
-bool Canvas::pythagoreanCheck(int a, int b, float c) const {
-    if (a * a + b * b > c * c) { return false; }
+inline bool Canvas::pointInsideRadius(int a, int b, float r) const {
+    if (a * a + b * b > r * r) { return false; }
     return true;
 }
 
-bool Canvas::containsExtension(const std::string& file) const {
-    size_t dotPos = file.rfind('.');
-    return (dotPos != std::string::npos && dotPos != file.length() - 1);
+inline bool Canvas::containsExtension(const std::string& file) const {
+    return (file.rfind('.') != std::string::npos && file.rfind('.') != file.length() - 1);
 }
 
 Canvas::Canvas(size_t aHeight, size_t aWidth)
@@ -73,7 +72,7 @@ void Canvas::saveToPPM(string fileName)
     }
     return;
 }
-bool Canvas::pointInBounds(int y, int x) const
+inline bool Canvas::pointInBounds(int y, int x) const
 {
     return 0 <= x && x < width && 0 <= y && y < height;
 }
@@ -112,7 +111,7 @@ void Canvas::draw(const Circle &aCircle)
             if (pixels[y*width+x] == aCircle.getColor()) { continue; }
             int dx = abs(x - aCircle.getPosX());
             int dy = abs(y - aCircle.getPosY()); 
-            if (pythagoreanCheck(dy, dx, (int) aCircle.getRadius())) {
+            if (pointInsideRadius(dy, dx, (int) aCircle.getRadius())) {
                 pixels[y * width + x] = aCircle.getColor();
             }
         }
@@ -137,8 +136,8 @@ void Canvas::draw(const Ring &aRing)
             int dy = abs(y - aRing.getPosY());
             float radius = aRing.getRadius();
             float thickness = aRing.getThickness();
-            bool insideOuterEdge = pythagoreanCheck(dy, dx, radius);
-            bool insideInnerEdge = pythagoreanCheck(dy, dx, radius - thickness);
+            bool insideOuterEdge = pointInsideRadius(dy, dx, radius);
+            bool insideInnerEdge = pointInsideRadius(dy, dx, radius - thickness);
             if (insideOuterEdge && !insideInnerEdge) {
                 pixels[y * width + x] = aRing.getColor();
             }
