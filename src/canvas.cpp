@@ -1,6 +1,6 @@
 #include "../include/canvas.h"
 
-#include "../../../libraries/lodepng/lodepng.h"
+#include "lodepng.h"
 
 #include <stdlib.h>
 #include <cstring>
