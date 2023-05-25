@@ -1,5 +1,6 @@
 *.exe
 *.ppm
+*.png
 .vscode
 build.bat
 build.sh

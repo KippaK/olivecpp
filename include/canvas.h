@@ -29,11 +29,12 @@ public:
     void draw(const Line &aLine);
 
     void saveToPPM(string file);
+    void saveToPNG(string file);
 
 private:
     inline bool pointInBounds(int y, int x) const;
     inline bool pointInsideRadius(int a, int b, float r) const;
-    inline bool containsExtension(const std::string& file) const;
+    inline bool containsExtension(const string &file, const string &extension) const;
 
 private:
     uint32_t *pixels;

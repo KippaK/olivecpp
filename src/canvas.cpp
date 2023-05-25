@@ -1,5 +1,7 @@
 #include "../include/canvas.h"
 
+#include "../../../libraries/lodepng/lodepng.h"
+
 #include <stdlib.h>
 #include <cstring>
 #include <string>
@@ -7,7 +9,13 @@
 #include <cstdio>
 #include <fstream>
 #include <algorithm>
+#include <vector>
+#include <iostream>
 
+using std::cin;
+using std::cout;
+using std::endl;
+using std::vector;
 using std::string;
 using std::abs;
 using std::pow;
@@ -23,8 +31,8 @@ inline bool Canvas::pointInsideRadius(int a, int b, float r) const {
     return true;
 }
 
-inline bool Canvas::containsExtension(const std::string& file) const {
-    return (file.rfind('.') != std::string::npos && file.rfind('.') != file.length() - 1);
+inline bool Canvas::containsExtension(const string &file, const string &extension) const {
+    return (file.rfind(extension) != std::string::npos && file.rfind(extension) != file.length() - 1);
 }
 
 Canvas::Canvas(size_t aHeight, size_t aWidth)
@@ -51,6 +59,9 @@ void Canvas::fill(uint32_t aColor)
 
 void Canvas::saveToPPM(string fileName)
 {
+    if (!containsExtension(fileName, ".png")) {
+        fileName += ".png";
+    }
     FILE *file = NULL;
     {
         file = fopen(fileName.c_str(), "wb");
@@ -72,6 +83,31 @@ void Canvas::saveToPPM(string fileName)
     }
     return;
 }
+void Canvas::saveToPNG(string fileName)
+{
+    if (!containsExtension(fileName, ".png")) {
+        fileName += ".png";
+    }
+    vector<unsigned char> image;
+    image.reserve(width * height * 4);
+
+    for (int i = 0; i < width * height; ++i) {
+        uint32_t pixel = pixels[i];
+        image.push_back((pixel >> (3*8)) & 0xFF); // Red
+        image.push_back((pixel >> (2*8)) & 0xFF);  // Green
+        image.push_back((pixel >> (1*8)) & 0xFF);         // Blue
+        image.push_back((pixel >> (0*8)) & 0xFF); // Alpha
+    }
+
+    unsigned error = lodepng::encode(fileName, image, width, height);
+
+    if (error) {
+        cout << "PNG encoding error: " << lodepng_error_text(error) << endl;
+    } else {
+        cout << "PNG saved successfully as " << fileName << endl;
+    }
+}
+
 inline bool Canvas::pointInBounds(int y, int x) const
 {
     return 0 <= x && x < width && 0 <= y && y < height;
