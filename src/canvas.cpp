@@ -3,26 +3,38 @@
 #include "lodepng.h"
 
 #include <stdlib.h>
-#include <cstring>
-#include <string>
-#include <cmath>
 #include <cstdio>
-#include <fstream>
-#include <algorithm>
-#include <vector>
-#include <iostream>
+#include <cstring>
 
-using std::cin;
-using std::cout;
-using std::endl;
-using std::vector;
+#include <string>
 using std::string;
+
+#include <cmath>
 using std::abs;
 using std::pow;
 using std::sqrt;
 using std::min;
 using std::max;
+
+#include <fstream>
+using std::ifstream;
+
+#include <algorithm>
 using std::swap;
+
+#include <vector>
+using std::vector;
+
+#include <iostream>
+using std::cin;
+using std::cout;
+using std::cerr;
+using std::endl;
+
+#include <exception>
+using std::exception;
+using std::runtime_error;
+
 
 #define sqrt2 1.41421356
 
@@ -33,6 +45,42 @@ inline bool Canvas::pointInsideRadius(int a, int b, float r) const {
 
 inline bool Canvas::containsExtension(const string &file, const string &extension) const {
     return (file.rfind(extension) != std::string::npos && file.rfind(extension) != file.length() - 1);
+}
+
+string Canvas::getFileExtension(string fileName) const
+{
+    if (fileName.rfind('.') == string::npos) { return ""; }
+    uint16_t extPos = fileName.rfind('.') + 1;
+    return fileName.substr(extPos, fileName.length() - extPos);
+}
+
+void Canvas::loadFromPPM(string fileName)
+{
+    ifstream file(fileName, std::ios::binary);
+    if (!file) {
+        throw runtime_error("ERROR: Could not open file " + fileName);
+    }
+    string format;
+    size_t maxColorValue;
+    file >> format >> width >> height >> maxColorValue;
+    if (format != "P6") {
+        throw runtime_error("ERROR: Unsupported PPM format");
+    }
+    if (maxColorValue != 255) {
+        throw runtime_error("ERROR: Unsupported PPM color depth");
+    }
+    pixels = new uint32_t[width * height];
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    uint8_t bytes[3];
+    for (size_t i = 0; i < width * height; ++i)
+    {
+        for (int j = 0; j < 3; j++) { file >> bytes[j]; } 
+        for (int j = 0; j < 3; j++) {
+            pixels[i] = pixels[i]<<8 | bytes[j];
+        }
+        pixels[i] = pixels[i]<<8 | 0xFF;
+    }
 }
 
 Canvas::Canvas(size_t aHeight, size_t aWidth)
@@ -46,6 +94,27 @@ Canvas::Canvas(size_t aHeight, size_t aWidth, uint32_t aColor)
     width = aWidth;
     pixels = new uint32_t[height * width];
     fill(aColor);
+}
+
+Canvas::Canvas(string fileName)
+{
+    height = 0;
+    width = 0;
+    pixels = nullptr;
+    string extension = getFileExtension(fileName);
+    if (extension == "") {
+        cerr << "ERROR: file name " << fileName << " does not contain extension" << endl;
+    }
+    else if (extension == "ppm") {
+        try {
+            loadFromPPM(fileName);
+        } catch (const exception& e) {
+            cerr << e.what() << endl;
+        }
+    }
+    else {
+        cerr << "ERROR: This file type is not supported " << fileName << endl;
+    }
 }
 
 Canvas::~Canvas() {}

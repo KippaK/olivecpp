@@ -19,6 +19,7 @@ class Canvas
 public:
     Canvas(size_t aHeight, size_t aWidth);
     Canvas(size_t aHeight, size_t aWidth, uint32_t aColor);
+    Canvas(string fileName);
     ~Canvas();
 
     void fill(uint32_t aColor);
@@ -35,6 +36,10 @@ private:
     inline bool pointInBounds(int y, int x) const;
     inline bool pointInsideRadius(int a, int b, float r) const;
     inline bool containsExtension(const string &file, const string &extension) const;
+
+    string getFileExtension(string fileName) const;
+
+    void loadFromPPM(string fileName);
 
 private:
     uint32_t *pixels;

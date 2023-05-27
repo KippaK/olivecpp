@@ -25,7 +25,9 @@ int main() {
     canvas->drawOlympicRings(250, 200, 50);
     canvas->drawStopSign(400, 200, 100);
     canvas->drawSnowman(HEIGHT/2, 600, 400);
-    //  canvas->saveToPPM(file + ".ppm");
+    canvas->saveToPPM(file + ".ppm");
     canvas->saveToPNG(file + ".png");
+    Canvas *canvasCopy = new Canvas("output.ppm");
+    canvasCopy->saveToPPM("output_copy.ppm");
     return 0;
 }
