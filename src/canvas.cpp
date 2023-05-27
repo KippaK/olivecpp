@@ -59,8 +59,8 @@ void Canvas::fill(uint32_t aColor)
 
 void Canvas::saveToPPM(string fileName)
 {
-    if (!containsExtension(fileName, ".png")) {
-        fileName += ".png";
+    if (!containsExtension(fileName, ".ppm")) {
+        fileName += ".ppm";
     }
     FILE *file = NULL;
     {
