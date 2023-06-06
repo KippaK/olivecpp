@@ -40,6 +40,8 @@ private:
     inline bool pointInsideRadius(int a, int b, float r) const;
     inline bool containsExtension(const string &file, const string &extension) const;
 
+    void blendColor(uint32_t &base, uint32_t top);
+
     string getFileExtension(string fileName) const;
 
     void loadFromPPM(string fileName);

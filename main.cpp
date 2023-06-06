@@ -20,7 +20,8 @@ int main() {
     //  canvas->drawStopSign(HEIGHT/2, WIDTH/2, 300);
     //  canvas->drawOlympicRings(HEIGHT/2, WIDTH/2, 100);
     canvas->draw(Line(50, 50, 100, 200, 5, 0xFFFFFFFF));
-    canvas->draw(Circle(50, 250, 40, 0xFFFFFFFF));
+    canvas->draw(Circle(50, 250, 40, 0x000000FF));
+    canvas->draw(Circle(50, 250, 35, 0x0000FF50));
     canvas->draw(Ring(50, 400, 40, 5, 0xFFFFFFFF));
     canvas->draw(Triangle(300, 400, 400, 500, 450, 300, WHITE));
     canvas->drawOlympicRings(250, 200, 50);

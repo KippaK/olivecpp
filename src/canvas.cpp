@@ -83,6 +83,31 @@ void Canvas::loadFromPPM(string fileName)
     }
 }
 
+void Canvas::blendColor(uint32_t &base, uint32_t top)
+{
+    uint32_t r1 = (base>>(3*8))&(0xFF);
+    uint32_t g1 = (base>>(2*8))&(0xFF);
+    uint32_t b1 = (base>>(1*8))&(0xFF);
+    uint32_t a1 = (base>>(0*8))&(0xFF);
+    uint32_t r2 = (top>>(3*8))&(0xFF);
+    uint32_t g2 = (top>>(2*8))&(0xFF);
+    uint32_t b2 = (top>>(1*8))&(0xFF);
+    uint32_t a2 = (top>>(0*8))&(0xFF);
+    if (a1 == 0x00 || a2 == 0xFF) {
+        base = top;
+        return;
+    }
+    if (a2 == 0x00) {
+        return;
+    }
+    r1 = (r1*(255 - a2) + r2*a2)/255; if (r1 > 255) r1 = 255;
+    g1 = (g1*(255 - a2) + g2*a2)/255; if (g1 > 255) g1 = 255;
+    b1 = (b1*(255 - a2) + b2*a2)/255; if (b1 > 255) b1 = 255;
+    a1 = a2 + (a1 * (255 - a2) + 127) / 255;
+    base = (r1<<(3*8)) | (g1<<(2*8)) | (b1<<(1*8)) | (a1<<(0*8));
+    return;
+}
+
 Canvas::Canvas(size_t aHeight, size_t aWidth)
 {
     Canvas(aHeight, aWidth, 0x000000FF);
@@ -195,7 +220,7 @@ void Canvas::draw(const Rectangle &aRectangle)
         for (int x = x1; x <= x2; x++)
         {
             if (x < 0 || x >= width) { continue; }
-            pixels[y * width + x] = aRectangle.getColor();
+            blendColor(pixels[y*width+x], aRectangle.getColor());
         }
     }
 }
@@ -217,7 +242,7 @@ void Canvas::draw(const Circle &aCircle)
             int dx = abs(x - aCircle.getPosX());
             int dy = abs(y - aCircle.getPosY()); 
             if (pointInsideRadius(dy, dx, (int) aCircle.getRadius())) {
-                pixels[y * width + x] = aCircle.getColor();
+                blendColor(pixels[y*width+x], aCircle.getColor());
             }
         }
     }
@@ -244,7 +269,7 @@ void Canvas::draw(const Ring &aRing)
             bool insideOuterEdge = pointInsideRadius(dy, dx, radius);
             bool insideInnerEdge = pointInsideRadius(dy, dx, radius - thickness);
             if (insideOuterEdge && !insideInnerEdge) {
-                pixels[y * width + x] = aRing.getColor();
+                blendColor(pixels[y*width+x], aRing.getColor());
             }
         }
     }
@@ -266,7 +291,7 @@ void Canvas::draw(const Octagon &aOctagon)
             int dy = abs(aOctagon.getPosY() - y);
             int dx = abs(aOctagon.getPosX() - x);
             if (dy + dx <= aOctagon.getSize() / 2 * sqrt2) {
-                pixels[y * width + x] = aOctagon.getColor();
+                blendColor(pixels[y*width+x], aOctagon.getColor());
             }
         }
     }
@@ -283,7 +308,7 @@ void Canvas::draw(const Triangle &aTriangle)
         for (int x = x1; x <= x2; x++) {
             if (x < 0 || x >= width) { continue; }
             if (aTriangle.pointIsInside(x, y)) {
-                pixels[y*width+x] = aTriangle.getColor();
+                blendColor(pixels[y*width+x], aTriangle.getColor());
             }
         }
     }
