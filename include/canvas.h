@@ -5,6 +5,7 @@
 #include "shapes/octagon.h"
 #include "shapes/ring.h"
 #include "shapes/line.h"
+#include "shapes/triangle.h"
 
 #include "utilities/color_definitions.h"
 
@@ -28,6 +29,8 @@ public:
     void draw(const Octagon &aOctagon);
     void draw(const Ring &aRing);
     void draw(const Line &aLine);
+    void draw(const Triangle &aTriangle);
+
 
     void saveToPPM(string file);
     void saveToPNG(string file);

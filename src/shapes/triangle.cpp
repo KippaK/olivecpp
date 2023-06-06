@@ -1,4 +1,10 @@
 #include "../../include/shapes/triangle.h"
+#include <cmath>
+#include <algorithm>
+
+using std::abs;
+using std::min;
+using std::max;
 
 Triangle::Triangle()
 {
@@ -26,9 +32,39 @@ Triangle::~Triangle()
 {
 }
 
+float Triangle::area(int x1, int y1, int x2, int y2, int x3, int y3) const
+{
+    return abs(x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2));
+}
 
+bool Triangle::pointIsInside(int x, int y) const
+{
+   const float A = area(x1, y1, x2, y2, x3, y3);
+   const float A1 = area(x, y, x2, y2, x3, y3);
+   const float A2 = area(x1, y1, x, y, x3, y3);
+   const float A3 = area(x1, y1, x2, y2, x, y);
+   return (A == A1 + A2 + A3);
+}
 
+int Triangle::getMinX() const
+{
+    return min(min(x1, x2), x3);
+}
 
+int Triangle::getMinY() const
+{
+    return min(min(y1, y2), y3);
+}
+
+int Triangle::getMaxX() const
+{
+    return max(max(x1, x2), x3);
+}
+
+int Triangle::getMaxY() const
+{
+    return max(max(y1, y2), y3);
+}
 
 
 int Triangle::getX1() const

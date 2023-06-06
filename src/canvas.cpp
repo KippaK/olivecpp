@@ -272,7 +272,22 @@ void Canvas::draw(const Octagon &aOctagon)
     }
 }
 
-
+void Canvas::draw(const Triangle &aTriangle)
+{
+    int x1 = aTriangle.getMinX();
+    int x2 = aTriangle.getMaxX();
+    int y1 = aTriangle.getMinY();
+    int y2 = aTriangle.getMaxY();
+    for (int y = y1; y <= y2; y++){
+        if (y < 0 || y >= height) { continue; }
+        for (int x = x1; x <= x2; x++) {
+            if (x < 0 || x >= width) { continue; }
+            if (aTriangle.pointIsInside(x, y)) {
+                pixels[y*width+x] = aTriangle.getColor();
+            }
+        }
+    }
+}
 
 // Mostly copied from the olive.c library, don't fully know how it works
 void Canvas::draw(const Line &aLine)
